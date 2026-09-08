@@ -1,6 +1,6 @@
 ---
 title: "Assignment 2: Coding Basics"
-author: "Student Name"
+author: "Tracy Che"
 output: pdf_document
 geometry: margin=2.54cm
 editor_options: 
@@ -45,11 +45,19 @@ library(knitr)
 4.  Insert comments in your code to describe what you are doing.
 
 ```{r basics 1}
-#1. 
+#1.  create a sequence containing the numbers and display
+sequence_1 <- seq(from = 1, to = 55, by = 5)
+sequence_1
 
-#2. 
+#2. calculating mean and median, assigning them to variable names, and display
+mean_value <- mean(sequence_1)
+median_value <- median(sequence_1)
 
-#3. 
+mean_value
+median_value
+
+#3. if mean is greater than median, it will return true, otherwise false
+mean_value > median_value
 
 ```
 
@@ -64,13 +72,29 @@ library(knitr)
 8.  Label the columns of your data frame with informative titles.
 
 ```{r basics 2}
+#5 and 6
+#Character vector
+names <- c('Tracy', 'Mary', 'Andrew', 'Scott')
 
+#numerical vector
+scores <- c(96, 99, 98, 95)
+
+#logical vector
+scholarship_status <- c(FALSE, TRUE, TRUE, TRUE)
+
+#7 assign to dataframe and assign names
+student_data <- data.frame(names, scores, scholarship_status)
+
+#8 assign the colomn names
+colnames(student_data) <- c("Student_Name", "Test_Score", "Scholarship_Status")
+
+student_data
 
 ```
 
 9.  QUESTION: How is this data frame different from a matrix?
 
-> Answer:
+> Answer:data frame contains different types of data, such as character and numbers, while in a matrix all the data should be same type
 
 10. Create a function with one input. In this function, use `if`...`else` to evaluate the value of the input: if it is greater than 50, print the word "Pass"; otherwise print the word "Fail". 
 
@@ -82,21 +106,39 @@ library(knitr)
 
 ```{r basics 3}
 #10. Create a function using if...else
-
+test_1 <- function(x) {
+  if (x > 50) {
+    print("Pass")
+  } else {
+    print("Fail")
+  }
+}
 #11. Create a function using ifelse()
+
+test_2 <- function(x) {
+  print(ifelse(x > 50, "Pass", "Fail"))
+}
 
 #12a. Run the first function with the value 52.5
 
+test_1(52.5)
+
 #12b. Run the second function with the value 52.5
+
+test_2(52.5)
 
 #13a. Run the first function with the vector of test scores
 
+#test_1(scores)
+
 #13b. Run the second function with the vector of test scores
+
+test_2(scores)
 ```
 
 14. QUESTION: Which option of `if`...`else` vs. `ifelse` worked? Why? (Hint: search the web for "R vectorization")
 
-> Answer:
+> Answer: only ifelse function worked. It is because that the if...else function including the  if (x > 50) statement can only check one condition at a time, but a vector gives the function multiple data. 
 
 
 ## Crafting reports - Part 4
@@ -107,7 +149,7 @@ Add a table of contents to your document and knit to a PDF. Submit your PDF to C
 
 ### Github link
 
-> Answer:
+> Answer: https://github.com/tracy-siyu-che/EDE_R_Lab_F26/tree/main/Assignments
 
 
 **NOTE** Before knitting, you'll need to comment out the call to the function in Q13 that does not work. (A document can't knit if the code it contains causes an error!)
