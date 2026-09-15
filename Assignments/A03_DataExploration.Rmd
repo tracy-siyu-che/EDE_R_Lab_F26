@@ -33,6 +33,34 @@ This exercise accompanies the lessons in Environmental Data Exploration M3: Data
 
 ```{r setup,  message = FALSE}
 
+# Load the packages required for this assignment
+library(tidyverse)
+library(lubridate)
+library(here)
+
+# Keep code visible and control figure size
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE,
+  fig.width = 6,
+  fig.height = 4
+)
+
+# Check the working directory and project root
+getwd()
+here()
+
+
+readLines(
+  here("Data", "ECOTOX_Neonicotinoids_Insects_raw.txt"),
+  n = 2
+)
+
+# Import the litter CSV file
+Litter <- read.csv(
+  here("Data", "NEON_NIWO_Litter_massdata_2016-26_raw.csv"),
+  stringsAsFactors = FALSE
+)
 
 ```
 
