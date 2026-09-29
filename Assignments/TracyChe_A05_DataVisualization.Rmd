@@ -1,6 +1,6 @@
 ---
 title: "Assignment 5: Data Visualization"
-author: "Student Name"
+author: "Tracy Che"
 output: pdf_document
 geometry: margin=2.54cm
 fig_height: 3
@@ -429,8 +429,8 @@ print(needles_facet_plot)
 9. Which plot—your solution or the AI solution—more effectively communicates the data? Evaluate at least three specific choices, such as data filtering, facet structure, date-axis formatting, labels and units, theme, accessibility, or unnecessary code. Identify one useful idea from the AI
 solution and one choice you would reject or improve. If the solutions are very similar, explain why both approaches are appropriate.
 
-> AI comparison: 
+> AI comparison: The two plots uses different plot design, my plot put the three class plot above and below one another, while Claude code put them side by side. My plot structures better than Claude because the data has more space to present themselves in my plot. Claude uses prettier color than mine. The lable and axies design are similar. 
 
 10. Question: Which encoding in Questions 6 and 7—color or facets—do you think is more effective for comparing NLCD classes, and why? Consider overlap, ease of comparison, accessibility, and the amount of space used by each figure.
 
-> Answer: 
+> Answer: Facets are more effective in communicating, because it shows the same types in one plot, which could be emphasized more than using color to distinguish the types. The color difference is unnecessary in this case because it makes the plot chaotic. The disadvantage is that facets use more space however this negative impact could be reduced in plot design. 
