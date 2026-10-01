@@ -128,8 +128,8 @@ url=paste0(
   "limit=50000&",
   "properties=time,parameter_code,value,unit_of_measure,approval_status,qualifier&",
   #"time_series_id=438fae403f374eb680a050a9c3a67148&",
-  "monitoring_location_id=USGS-02087500&",
-  "time=P7D&",
+  "monitoring_location_id=USGS-02085070&",
+  "time=P24D&",
   "f=csv")
 
 #Read the URL
@@ -198,7 +198,7 @@ You'll also need to look up the IDs of the variables you want to extract. Those 
 
 ```{r}
 #Apply the API key
-#census_api_key("d4ad7874c996c7a83fec0a81466309ddc07d8e22a", install = TRUE)
+census_api_key("d4ad7874c996c7a83fec0a81466309ddc07d8e22")
 
 nc_pop <- 
   get_acs(geography = "county",
