@@ -29,6 +29,7 @@ This exercise accompanies the lessons in Environmental Data Analytics on data sc
 #1 
 
 library(tidyverse)
+library(rvest)
 library(lubridate)
 library(here)
 library(cowplot)
