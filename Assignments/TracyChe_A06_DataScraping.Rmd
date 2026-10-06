@@ -109,16 +109,14 @@ the_ownership <- the_website %>%
   html_nodes("div+ table tr:nth-child(2) td:nth-child(4)") %>%
   html_text(trim = TRUE)
 
-#the_maxday <- the_website %>%
- # html_nodes(maxday_css) %>%
- # html_text(trim = TRUE)
+the_maxday <- the_website %>%
+  html_nodes('th~ td+ td') %>%
+  html_text(trim = TRUE)
 
 the_name
 the_pwsid
 the_ownership
-# the_maxday
-
-
+the_maxday
 
 ```
 
@@ -135,8 +133,41 @@ the_ownership
 #4 
 
 
+Durham2024 <- data.frame(
+  System = rep(the_name, 12),
+  PWSID = rep(the_pwsid, 12),
+  Ownership = rep(the_ownership, 12),
+  MaxDay = as.numeric(the_maxday),
+  Month = c(
+    "Jan", "May", "Sep",
+    "Feb", "Jun", "Oct",
+    "Mar", "Jul", "Nov",
+    "Apr", "Aug", "Dec"
+  )
+) %>%
+  mutate(
+    Date = mdy(paste0(Month, "-1-2024"))
+  ) %>%
+  arrange(Date)
+
+Durham2024
+
+
 #5 
 
+Durham2024 %>%
+  ggplot(aes(x = Date, y = MaxDay)) +
+  geom_line() +
+  geom_point() +
+  scale_x_date(
+    breaks = "1 month",
+    date_labels = "%b"
+  ) +
+  labs(
+    title = "Durham Maximum Daily Water Use in 2024",
+    x = "Month",
+    y = "Maximum Day Use (MGD)"
+  )
 
 ```
 
@@ -148,8 +179,57 @@ the_ownership
 
 
 ```{r construct.a.scraping.function}
-#6. 
 
+
+#6
+
+scrape.it <- function(PWSID, year){
+
+  # Create the URL
+  the_url <- paste0(
+    "https://www.ncwater.org/WUDC/app/LWSP/report.php?pwsid=",
+    PWSID,
+    "&year=",
+    year
+  )
+  # Read the website
+  the_website <- read_html(the_url)
+
+  # Scrape the data
+  the_name <- the_website %>%
+    html_nodes("div+ table tr:nth-child(1) td:nth-child(2)") %>%
+    html_text(trim = TRUE)
+
+  the_ownership <- the_website %>%
+    html_nodes("div+ table tr:nth-child(2) td:nth-child(4)") %>%
+    html_text(trim = TRUE)
+
+  the_maxday <- the_website %>%
+    html_nodes("th~ td+ td") %>%
+    html_text(trim = TRUE)
+
+  # Create dataframe
+  the_df <- data.frame(
+    System = rep(the_name, 12),
+    PWSID = rep(PWSID, 12),
+    Ownership = rep(the_ownership, 12),
+    MaxDay = as.numeric(the_maxday),
+    Month = c(
+      "Jan", "May", "Sep",
+      "Feb", "Jun", "Oct",
+      "Mar", "Jul", "Nov",
+      "Apr", "Aug", "Dec"
+    ),
+    Year = rep(year, 12)
+  ) %>%
+    mutate(
+      Date = mdy(paste0(Month, "-1-", Year))
+    ) %>%
+    arrange(Date)
+
+  # Return dataframe
+  return(the_df)
+}
 
 ```
 
@@ -158,13 +238,52 @@ the_ownership
 ```{r fetch.and.plot.Durham.2020.data}
 #7 
 
+Durham2020 <- scrape.it("03-32-010", 2020)
+
+glimpse(Durham2020)
+
+Durham2020 %>%
+  ggplot(aes(x = Date, y = MaxDay)) +
+  geom_line() +
+  geom_point() +
+  scale_x_date(
+    breaks = "1 month",
+    date_labels = "%b"
+  ) +
+  labs(
+    title = "Durham Maximum Daily Water Use in 2020",
+    x = "Month",
+    y = "Maximum Day Use (MGD)"
+  )
 
 ```
 
-8. Use the function above to extract data for Cary (PWSID = '03-32-010') in 2020. Combine this data with the Durham data collected above and create a plot that compares Cary's to Durham's water withdrawals.
+8. Use the function above to extract data for Cary (PWSID = '03-92-020') in 2020. Combine this data with the Durham data collected above and create a plot that compares Cary's to Durham's water withdrawals.
 
 ```{r fetch.and.plot.Cary.2020.data}
 #8 
+
+Cary2020 <- scrape.it("03-92-020", 2020)
+
+water2020 <- bind_rows(
+  Durham2020,
+  Cary2020
+)
+
+water2020 %>%
+  ggplot(aes(x = Date, y = MaxDay, color = System)) +
+  geom_line() +
+  geom_point() +
+  scale_x_date(
+    breaks = "1 month",
+    date_labels = "%b"
+  ) +
+  labs(
+    title = "Durham and Cary Maximum Daily Water Use in 2020",
+    x = "Month",
+    y = "Maximum Day Use (MGD)",
+    color = "Water System"
+  )
 
 
 ```
@@ -176,10 +295,30 @@ the_ownership
 
 ```{r fetch.and.plot.Cary.multiyear.data }
 #9 
+Cary.multiyear <- map2(
+  rep("03-92-020", 6),
+  2018:2023,
+  scrape.it
+) %>%
+  bind_rows()
 
+Cary.multiyear %>%
+  ggplot(aes(x = Date, y = MaxDay)) +
+  geom_line() +
+  geom_point() +
+  geom_smooth(method = "loess", se = FALSE) +
+  scale_x_date(
+    breaks = "1 year",
+    date_labels = "%Y"
+  ) +
+  labs(
+    title = "Cary Maximum Daily Water Use, 2018–2023",
+    x = "Year",
+    y = "Maximum Day Use (MGD)"
+  )
 
 ```
 
 Question: Just by looking at the plot (i.e. not running statistics), does Cary have a trend in water usage over time?
-> Answer:
+> Answer: Yes. Cary has a slight increasing trend of water usage over the years. Although there are seasonal variations each year, the smooth line shows slight increase from around 22 MGD to over 24 MGD.  
 >
