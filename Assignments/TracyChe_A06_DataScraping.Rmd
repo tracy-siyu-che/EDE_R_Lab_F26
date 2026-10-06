@@ -1,6 +1,6 @@
 ---
 title: "Assignment 6: Data Scraping"
-author: "Student Name"
+author: "Tracy Che"
 output: pdf_document
 editor_options: 
   chunk_output_type: console
@@ -28,6 +28,28 @@ This exercise accompanies the lessons in Environmental Data Analytics on data sc
 ```{r 1. Project Setup, message = FALSE}
 #1 
 
+library(tidyverse)
+library(lubridate)
+library(here)
+library(cowplot)
+library(RColorBrewer)
+
+getwd()
+
+here::i_am(
+  "Assignments/TracyChe_A06_DataScraping.Rmd"
+)
+
+here()
+
+mytheme <- theme_gray() +
+  theme(
+    axis.text = element_text(color = "black"),
+    legend.position = "top"
+  )
+
+theme_set(mytheme)
+
 
 ```
 
@@ -40,6 +62,15 @@ Indicate this website as the as the URL to be scraped. (In other words, read the
 
 ```{r set.the.scraping.website}
 #2 
+
+
+the_url <- paste0(
+  "https://www.ncwater.org/wudc/app/lwsp/report.php?",
+  "pwsid=03-32-010&year=2024"
+)
+
+the_website <- read_html(the_url)
+
 
 ```
 
@@ -59,6 +90,34 @@ In the code chunk below scrape these values, assigning them to four separate var
 
 ```{r scrape.the.data}
 #3 
+
+#name_css <- "div+ table tr:nth-child(1) td:nth-child(2)"
+#pwsid_css <- "td tr:nth-child(1) td:nth-child(5)"
+#ownership_css <- "div+ table tr:nth-child(2) td:nth-child(4)"
+#maxday_css <- c("40.2400", "37.3800", "37.9100", "33.8100", "36.8400", "36.9000",
+                #"36.5300", "38.0400", "33.8000", "37.9500", "35.2000", "32.2000")
+
+the_name <- the_website %>%
+  html_nodes("div+ table tr:nth-child(1) td:nth-child(2)") %>%
+  html_text(trim = TRUE)
+
+the_pwsid <- the_website %>%
+  html_nodes("td tr:nth-child(1) td:nth-child(5)") %>%
+  html_text(trim = TRUE)
+
+the_ownership <- the_website %>%
+  html_nodes("div+ table tr:nth-child(2) td:nth-child(4)") %>%
+  html_text(trim = TRUE)
+
+#the_maxday <- the_website %>%
+ # html_nodes(maxday_css) %>%
+ # html_text(trim = TRUE)
+
+the_name
+the_pwsid
+the_ownership
+# the_maxday
+
 
 
 ```
